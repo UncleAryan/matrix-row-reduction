@@ -5,23 +5,35 @@ public class Main {
                              {1, 4, 3, -2},
                              {2, 7, 1, -2}};
 
-    static int[][] matrix1 = {{0, 1, 5, -4},
-                             {0, 4, 3, -2},
-                             {0, 7, 1, -2}};
-
     public static void main(String[] args) {
-        int pivot = getRowReducedForm(matrix);
-        System.out.println(pivot);
+        int pivotColumn = getPivotColumn(matrix);
+        int nonZeroEntry = getNonZeroEntry(matrix, pivotColumn);
+
+        printMatrix(matrix);
+        System.out.println("Nonzero Pivot Entry: " + nonZeroEntry);
     }
 
-    public static int getRowReducedForm(int[][] matrix) {
-        int[][] newMatrix = matrix;
-        int pivotColumn;
-        int currentColumn = getPivotColumn(newMatrix);
-
-        return currentColumn;
+    /*
+    Step 2: Select a nonzero entry in the pivot column as a pivot. If necessary,
+    interchange rows to move this entry into the pivot position.
+     */
+    public static int getNonZeroEntry(int[][] matrix, int pivotColumn) {
+        for(int row = 0; row < matrix.length; row++) {
+            if(matrix[row][pivotColumn] != 0) {
+                if(row != 0) {
+                    // if the its not the top most row, interchange it with the top most row
+                    interchange(matrix, 0, row);
+                }
+                return matrix[0][pivotColumn];
+            }
+        }
+        return 0;
     }
 
+    /*
+    Step 1: Begin with the leftmost nonzero column. This is a pivot column. The pivot
+    position is at the top.
+     */
     public static int getPivotColumn(int[][] matrix) {
         // leftmost nonzero column
         int currentColumn = 0;
@@ -38,20 +50,18 @@ public class Main {
         return -1; // a nonzero column was not found
     }
 
-    public static int getLeftMostNonZeroColumn(int[][] matrix) {
-        int pivot = 0;
-        int currentColumn = 0;
+    public static void interchange(int matrix[][], int row1, int row2) {
+        int[] tempRow = matrix[row1];
+        matrix[row1] = matrix[row2];
+        matrix[row2] = tempRow;
+    }
 
-        // get leftmost non-zero column
-        while(pivot == 0) {
-            for(int i = 0; i < matrix.length; i++) {
-                if(matrix[i][currentColumn] != 0) {
-                    return matrix[i][currentColumn];
-                }
+    public static void printMatrix(int[][] matrix) {
+        for(int i = 0; i < matrix.length; i++) {
+            for(int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
             }
-            currentColumn++;
+            System.out.println();
         }
-
-        return pivot;
     }
 }
