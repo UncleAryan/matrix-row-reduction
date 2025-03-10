@@ -8,11 +8,15 @@ public class Main {
     public static void main(String[] args) {
         int currentRow = 0;
         int pivotColumn = getPivotColumn(matrix);
+        int currentColumn = pivotColumn;
         int nonZeroEntry = selectNoneZeroEntry(matrix, pivotColumn);
         createZeroBelowPivot(matrix, pivotColumn, currentRow);
 
-        Display.printMatrix(matrix);
-        //System.out.println("Nonzero Pivot Entry: " + nonZeroEntry);
+        currentRow++;
+        currentColumn++;
+        double[][] subMatrix = getSubMatrix(matrix, currentRow, currentColumn);
+
+        Display.printMatrix(subMatrix);
     }
 
     /*
@@ -22,9 +26,12 @@ public class Main {
     public static void createZeroBelowPivot(double[][] matrix, int pivotColumn, int currentRow) {
         for(int row = currentRow + 1; row < matrix.length; row++) {
             if(matrix[row][pivotColumn] != 0) {
-                if(matrix[row][pivotColumn] > matrix[currentRow][pivotColumn]) {
+                if(matrix[row][pivotColumn] >= matrix[currentRow][pivotColumn]) {
                     double scaler = matrix[row][pivotColumn] / matrix[currentRow][pivotColumn];
                     RowOperations.row1MinusRow2(matrix, row, currentRow, scaler);
+                } else if(matrix[row][pivotColumn] < matrix[currentRow][pivotColumn]) {
+                    double scaler = matrix[row][pivotColumn] / matrix[currentRow][pivotColumn];
+                    RowOperations.row1PlusRow2(matrix, row, currentRow, scaler);
                 }
             }
         }
@@ -65,5 +72,17 @@ public class Main {
         }
 
         return -1; // a nonzero column was not found
+    }
+
+    public static double[][] getSubMatrix(double[][] matrix, int row, int col) {
+        double[][] subArray = new double[matrix.length - row][matrix[0].length - col];
+
+        for(int r = 0; r < subArray.length; r++) {
+            for(int c = 0; c < subArray[0].length; c++) {
+                subArray[r][c] = matrix[r + row][c + col];
+            }
+        }
+
+        return subArray;
     }
 }
