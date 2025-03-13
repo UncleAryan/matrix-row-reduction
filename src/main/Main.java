@@ -10,13 +10,17 @@ public class Main {
         int pivotColumn = getPivotColumn(matrix);
         int currentColumn = pivotColumn;
         int nonZeroEntry = selectNoneZeroEntry(matrix, pivotColumn);
-        createZeroBelowPivot(matrix, pivotColumn, currentRow);
+        createZeroBelowPivot(matrix, pivotColumn, 0);
 
         currentRow++;
         currentColumn++;
         double[][] subMatrix = getSubMatrix(matrix, currentRow, currentColumn);
+        pivotColumn = getPivotColumn(subMatrix);
+        nonZeroEntry = selectNoneZeroEntry(subMatrix, pivotColumn);
+        createZeroBelowPivot(subMatrix, pivotColumn, 0);
 
         Display.printMatrix(subMatrix);
+        System.out.println(currentRow);
     }
 
     /*
@@ -27,11 +31,13 @@ public class Main {
         for(int row = currentRow + 1; row < matrix.length; row++) {
             if(matrix[row][pivotColumn] != 0) {
                 if(matrix[row][pivotColumn] >= matrix[currentRow][pivotColumn]) {
-                    double scaler = matrix[row][pivotColumn] / matrix[currentRow][pivotColumn];
+                    double scaler = Math.abs(matrix[row][pivotColumn] / matrix[currentRow][pivotColumn]);
                     RowOperations.row1MinusRow2(matrix, row, currentRow, scaler);
+                    System.out.println("This ran");
                 } else if(matrix[row][pivotColumn] < matrix[currentRow][pivotColumn]) {
-                    double scaler = matrix[row][pivotColumn] / matrix[currentRow][pivotColumn];
+                    double scaler = Math.abs(matrix[row][pivotColumn] / matrix[currentRow][pivotColumn]);
                     RowOperations.row1PlusRow2(matrix, row, currentRow, scaler);
+                    System.out.println("This ran");
                 }
             }
         }
